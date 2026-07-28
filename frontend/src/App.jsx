@@ -3,14 +3,15 @@ import { Toaster } from 'react-hot-toast'
 import { LoginPage } from './pages/auth/LoginPage'
 import { AdminDashboard } from './pages/admin/AdminDashboard'
 import { InternDashboard } from './pages/intern/InternDashboard'
+import { RoleRoute } from './components/auth/RoleRoute'
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/intern" element={<InternDashboard />} />
+        <Route path="/admin" element={<RoleRoute allow={['ADMIN']}><AdminDashboard /> </RoleRoute>} />
+        <Route path="/intern" element={<RoleRoute allow={['INTERN']}><InternDashboard /> </RoleRoute>} />
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
