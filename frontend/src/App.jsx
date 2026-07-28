@@ -1,12 +1,16 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { LoginPage } from './pages/auth/LoginPage'
+import { AdminDashboard } from './pages/admin/AdminDashboard'
+import { InternDashboard } from './pages/intern/InternDashboard'
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/intern" element={<InternDashboard />} />
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>

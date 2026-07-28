@@ -8,6 +8,8 @@ import { Button } from '../ui/Button'
 import { Checkbox } from '../ui/Checkbox'
 import { Input } from '../ui/Input'
 import { Label } from '../ui/Label'
+import { useAuth } from '../../context/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 const loginSchema = z.object({
   email: z
@@ -23,6 +25,8 @@ const loginSchema = z.object({
 export function LoginForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const navigate = useNavigate()
+  const { login } = useAuth()
 
   const {
     register,
@@ -40,11 +44,20 @@ export function LoginForm() {
     setIsSubmitting(true)
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 800))
-      console.log('Login values:', values)
-      toast.success('Form looks valid (API not connected yet)')
-    } catch {
-      toast.error('Something went wrong. Please try again.')
+      const data = await login(values)
+
+      toast.success('Signed in successfully')
+
+      if (data.role === 'ADMIN') {
+        navigate('/admin', { replace: true })
+      } else {
+        navigate('/intern', { replace: true })
+      }
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        'Invalid email or password. Please try again.'
+      toast.error(message)
     } finally {
       setIsSubmitting(false)
     }
