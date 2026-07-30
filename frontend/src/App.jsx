@@ -4,14 +4,55 @@ import { LoginPage } from './pages/auth/LoginPage'
 import { AdminDashboard } from './pages/admin/AdminDashboard'
 import { InternDashboard } from './pages/intern/InternDashboard'
 import { RoleRoute } from './components/auth/RoleRoute'
+import { InternListPage } from './pages/admin/interns/InternListPage'
+import { CreateInternPage } from './pages/admin/interns/CreateInternPage'
+import { EditInternPage } from './pages/admin/interns/EditInternPage'
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/admin" element={<RoleRoute allow={['ADMIN']}><AdminDashboard /> </RoleRoute>} />
-        <Route path="/intern" element={<RoleRoute allow={['INTERN']}><InternDashboard /> </RoleRoute>} />
+        <Route
+          path="/admin"
+          element={
+            <RoleRoute allow={['ADMIN']}>
+              <AdminDashboard />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/admin/interns"
+          element={
+            <RoleRoute allow={['ADMIN']}>
+              <InternListPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/admin/interns/new"
+          element={
+            <RoleRoute allow={['ADMIN']}>
+              <CreateInternPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/admin/interns/:id/edit"
+          element={
+            <RoleRoute allow={['ADMIN']}>
+              <EditInternPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/intern"
+          element={
+            <RoleRoute allow={['INTERN']}>
+              <InternDashboard />
+            </RoleRoute>
+          }
+        />
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>

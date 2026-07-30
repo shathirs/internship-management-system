@@ -163,6 +163,14 @@ public class InternService {
         intern.setStatus(status);
         intern.setUpdatedAt(Instant.now());
         intern = internRepository.save(intern);
+
+        if (intern.getUserId() != null) {
+            userRepository.findById(intern.getUserId()).ifPresent(user -> {
+                user.setEnabled(status == InternStatus.ACTIVE);
+                userRepository.save(user);
+            });
+        }
+
         return toResponse(intern);
     }
 
