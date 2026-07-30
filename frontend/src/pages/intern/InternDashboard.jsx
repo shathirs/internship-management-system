@@ -1,24 +1,15 @@
-import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import { DashboardLayout } from '../../components/layout/DashboardLayout'
 
 export function InternDashboard() {
-  const navigate = useNavigate()
-  const { user, logout } = useAuth()
-
-  function handleLogout() {
-    logout()
-    navigate('/login', { replace: true })
-  }
+  const { user } = useAuth()
 
   return (
-    <main style={{ padding: '2rem' }}>
+    <DashboardLayout>
       <h1>Intern Dashboard</h1>
       <p>
-        Signed in as <strong>{user?.name}</strong> ({user?.role})
+        Welcome back, <strong>{user?.name}</strong>.
       </p>
-      <button type="button" onClick={handleLogout}>
-        Sign out
-      </button>
-    </main>
+    </DashboardLayout>
   )
 }
