@@ -23,7 +23,7 @@ const adminMainMenu = [
   { label: 'Dashboard', icon: LayoutDashboard },
   { label: 'Interns', to: '/admin/interns', icon: Users },
   { label: 'Projects', to: '/admin/projects', icon: FolderKanban },
-  { label: 'Tasks', icon: CheckSquare },
+  { label: 'Tasks', to: '/admin/tasks', icon: CheckSquare },
   { label: 'Daily Work Logs', icon: NotebookPen },
   { label: 'Submissions', icon: FileUp },
   { label: 'Feedback', icon: MessageSquare },

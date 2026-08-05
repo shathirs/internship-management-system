@@ -10,6 +10,10 @@ import { EditInternPage } from './pages/admin/interns/EditInternPage'
 import { ProjectListPage } from './pages/admin/projects/ProjectListPage'
 import { CreateProjectPage } from './pages/admin/projects/CreateProjectPage'
 import { EditProjectPage } from './pages/admin/projects/EditProjectPage'
+import { TaskListPage } from './pages/admin/tasks/TaskListPage'
+import { CreateTaskPage } from './pages/admin/tasks/CreateTaskPage'
+import { EditTaskPage } from './pages/admin/tasks/EditTaskPage'
+import { AssignTaskPage } from './pages/admin/tasks/AssignTaskPage'
 
 function App() {
   return (
@@ -69,6 +73,38 @@ function App() {
           element={
             <RoleRoute allow={['ADMIN']}>
               <EditProjectPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/admin/tasks"
+          element={
+            <RoleRoute allow={['ADMIN']}>
+              <TaskListPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/admin/tasks/new"
+          element={
+            <RoleRoute allow={['ADMIN']}>
+              <CreateTaskPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/admin/tasks/:id/assign"
+          element={
+            <RoleRoute allow={['ADMIN']}>
+              <AssignTaskPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/admin/tasks/:id/edit"
+          element={
+            <RoleRoute allow={['ADMIN']}>
+              <EditTaskPage />
             </RoleRoute>
           }
         />
