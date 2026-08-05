@@ -22,7 +22,7 @@ import { useAuth } from '../../context/AuthContext'
 const adminMainMenu = [
   { label: 'Dashboard', icon: LayoutDashboard },
   { label: 'Interns', to: '/admin/interns', icon: Users },
-  { label: 'Projects', icon: FolderKanban },
+  { label: 'Projects', to: '/admin/projects', icon: FolderKanban },
   { label: 'Tasks', icon: CheckSquare },
   { label: 'Daily Work Logs', icon: NotebookPen },
   { label: 'Submissions', icon: FileUp },
@@ -80,13 +80,12 @@ export function Sidebar({ onNavigate }) {
           {mainMenu.map((item) => {
             const Icon = item.icon
             const isDashboard = item.label === 'Dashboard'
-            const isInterns = item.label === 'Interns'
 
-            if (isInterns) {
+            if (item.to) {
               return (
                 <li key={item.label}>
                   <NavLink
-                    to="/admin/interns"
+                    to={item.to}
                     className={({ isActive }) =>
                       `sidebar-link ${isActive ? 'is-active' : ''}`
                     }

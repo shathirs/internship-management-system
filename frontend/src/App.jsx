@@ -7,6 +7,9 @@ import { RoleRoute } from './components/auth/RoleRoute'
 import { InternListPage } from './pages/admin/interns/InternListPage'
 import { CreateInternPage } from './pages/admin/interns/CreateInternPage'
 import { EditInternPage } from './pages/admin/interns/EditInternPage'
+import { ProjectListPage } from './pages/admin/projects/ProjectListPage'
+import { CreateProjectPage } from './pages/admin/projects/CreateProjectPage'
+import { EditProjectPage } from './pages/admin/projects/EditProjectPage'
 
 function App() {
   return (
@@ -42,6 +45,30 @@ function App() {
           element={
             <RoleRoute allow={['ADMIN']}>
               <EditInternPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/admin/projects"
+          element={
+            <RoleRoute allow={['ADMIN']}>
+              <ProjectListPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/admin/projects/new"
+          element={
+            <RoleRoute allow={['ADMIN']}>
+              <CreateProjectPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/admin/projects/:id/edit"
+          element={
+            <RoleRoute allow={['ADMIN']}>
+              <EditProjectPage />
             </RoleRoute>
           }
         />
