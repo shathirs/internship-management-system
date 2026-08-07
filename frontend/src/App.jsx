@@ -14,6 +14,10 @@ import { TaskListPage } from './pages/admin/tasks/TaskListPage'
 import { CreateTaskPage } from './pages/admin/tasks/CreateTaskPage'
 import { EditTaskPage } from './pages/admin/tasks/EditTaskPage'
 import { AssignTaskPage } from './pages/admin/tasks/AssignTaskPage'
+import { WorkLogListPage } from './pages/admin/work-logs/WorkLogListPage'
+import { ReviewWorkLogPage } from './pages/admin/work-logs/ReviewWorkLogPage'
+import { InternWorkLogListPage } from './pages/intern/work-logs/InternWorkLogListPage'
+import { SubmitWorkLogPage } from './pages/intern/work-logs/SubmitWorkLogPage'
 
 function App() {
   return (
@@ -109,10 +113,42 @@ function App() {
           }
         />
         <Route
+          path="/admin/work-logs"
+          element={
+            <RoleRoute allow={['ADMIN']}>
+              <WorkLogListPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/admin/work-logs/:id/review"
+          element={
+            <RoleRoute allow={['ADMIN']}>
+              <ReviewWorkLogPage />
+            </RoleRoute>
+          }
+        />
+        <Route
           path="/intern"
           element={
             <RoleRoute allow={['INTERN']}>
               <InternDashboard />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/intern/work-logs"
+          element={
+            <RoleRoute allow={['INTERN']}>
+              <InternWorkLogListPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/intern/work-logs/new"
+          element={
+            <RoleRoute allow={['INTERN']}>
+              <SubmitWorkLogPage />
             </RoleRoute>
           }
         />
