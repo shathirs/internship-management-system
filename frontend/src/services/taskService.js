@@ -7,6 +7,11 @@ export async function getTasks({ search, status, projectId } = {}) {
   return data
 }
 
+export async function getMyTasks() {
+  const { data } = await api.get('/api/tasks/me')
+  return data
+}
+
 export async function getTaskById(id) {
   const { data } = await api.get(`/api/tasks/${id}`)
   return data

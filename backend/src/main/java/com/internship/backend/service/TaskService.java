@@ -10,6 +10,7 @@ import com.internship.backend.dto.AssignTaskRequest;
 import com.internship.backend.dto.CreateTaskRequest;
 import com.internship.backend.dto.TaskResponse;
 import com.internship.backend.dto.UpdateTaskRequest;
+import com.internship.backend.model.Intern;
 import com.internship.backend.model.Task;
 import com.internship.backend.model.TaskPriority;
 import com.internship.backend.model.TaskStatus;
@@ -65,6 +66,15 @@ public class TaskService {
         }
 
         return tasks.stream().map(this::toResponse).collect(Collectors.toList());
+    }
+
+    public List<TaskResponse> getMyTasks(String email) {
+        Intern intern = internRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Intern profile not found"));
+        return taskRepository.findByAssignedInternId(intern.getId())
+                .stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
     }
 
     public TaskResponse getById(String id) {

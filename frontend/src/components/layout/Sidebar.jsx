@@ -25,8 +25,8 @@ const adminMainMenu = [
   { label: 'Projects', to: '/admin/projects', icon: FolderKanban },
   { label: 'Tasks', to: '/admin/tasks', icon: CheckSquare },
   { label: 'Daily Work Logs', to: '/admin/work-logs', icon: NotebookPen },
-  { label: 'Submissions', icon: FileUp },
-  { label: 'Feedback', icon: MessageSquare },
+  { label: 'Submissions', to: '/admin/submissions', icon: FileUp },
+  { label: 'Feedback', to: '/admin/feedback', icon: MessageSquare },
   { label: 'Reports', icon: BarChart3 },
   { label: 'Notifications', icon: Bell },
 ]
@@ -35,8 +35,8 @@ const internMainMenu = [
   { label: 'Dashboard', icon: LayoutDashboard },
   { label: 'My Tasks', icon: ListTodo },
   { label: 'Daily Work Logs', to: '/intern/work-logs', icon: NotebookPen },
-  { label: 'Submissions', icon: FileUp },
-  { label: 'Feedback', icon: MessageSquare },
+  { label: 'Submissions', to: '/intern/submissions', icon: FileUp },
+  { label: 'Feedback', to: '/intern/feedback', icon: MessageSquare },
   { label: 'Notifications', icon: Bell },
 ]
 

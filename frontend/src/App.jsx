@@ -18,6 +18,12 @@ import { WorkLogListPage } from './pages/admin/work-logs/WorkLogListPage'
 import { ReviewWorkLogPage } from './pages/admin/work-logs/ReviewWorkLogPage'
 import { InternWorkLogListPage } from './pages/intern/work-logs/InternWorkLogListPage'
 import { SubmitWorkLogPage } from './pages/intern/work-logs/SubmitWorkLogPage'
+import { SubmissionListPage } from './pages/admin/submissions/SubmissionListPage'
+import { ReviewSubmissionPage } from './pages/admin/submissions/ReviewSubmissionPage'
+import { InternSubmissionListPage } from './pages/intern/submissions/InternSubmissionListPage'
+import { SubmitWorkPage } from './pages/intern/submissions/SubmitWorkPage'
+import { AdminFeedbackPage } from './pages/admin/feedback/AdminFeedbackPage'
+import { InternFeedbackPage } from './pages/intern/feedback/InternFeedbackPage'
 
 function App() {
   return (
@@ -129,6 +135,30 @@ function App() {
           }
         />
         <Route
+          path="/admin/submissions"
+          element={
+            <RoleRoute allow={['ADMIN']}>
+              <SubmissionListPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/admin/submissions/:id/review"
+          element={
+            <RoleRoute allow={['ADMIN']}>
+              <ReviewSubmissionPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/admin/feedback"
+          element={
+            <RoleRoute allow={['ADMIN']}>
+              <AdminFeedbackPage />
+            </RoleRoute>
+          }
+        />
+        <Route
           path="/intern"
           element={
             <RoleRoute allow={['INTERN']}>
@@ -149,6 +179,30 @@ function App() {
           element={
             <RoleRoute allow={['INTERN']}>
               <SubmitWorkLogPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/intern/submissions"
+          element={
+            <RoleRoute allow={['INTERN']}>
+              <InternSubmissionListPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/intern/submissions/new"
+          element={
+            <RoleRoute allow={['INTERN']}>
+              <SubmitWorkPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/intern/feedback"
+          element={
+            <RoleRoute allow={['INTERN']}>
+              <InternFeedbackPage />
             </RoleRoute>
           }
         />
