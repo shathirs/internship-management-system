@@ -24,6 +24,7 @@ import { InternSubmissionListPage } from './pages/intern/submissions/InternSubmi
 import { SubmitWorkPage } from './pages/intern/submissions/SubmitWorkPage'
 import { AdminFeedbackPage } from './pages/admin/feedback/AdminFeedbackPage'
 import { InternFeedbackPage } from './pages/intern/feedback/InternFeedbackPage'
+import { ReportsPage } from './pages/admin/reports/ReportsPage'
 
 function App() {
   return (
@@ -155,6 +156,14 @@ function App() {
           element={
             <RoleRoute allow={['ADMIN']}>
               <AdminFeedbackPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/admin/reports"
+          element={
+            <RoleRoute allow={['ADMIN']}>
+              <ReportsPage />
             </RoleRoute>
           }
         />

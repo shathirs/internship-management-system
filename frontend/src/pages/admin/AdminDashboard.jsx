@@ -6,10 +6,14 @@ export function AdminDashboard() {
 
   return (
     <DashboardLayout>
-      <h1>Admin Dashboard</h1>
-      <p>
-        Welcome back, <strong>{user?.name}</strong>.
-      </p>
+      <div className="page-header">
+        <div>
+          <h1>Admin Dashboard</h1>
+          <p>
+            Welcome back, <strong>{user?.name}</strong>.
+          </p>
+        </div>
+      </div>
     </DashboardLayout>
   )
 }

@@ -27,7 +27,7 @@ const adminMainMenu = [
   { label: 'Daily Work Logs', to: '/admin/work-logs', icon: NotebookPen },
   { label: 'Submissions', to: '/admin/submissions', icon: FileUp },
   { label: 'Feedback', to: '/admin/feedback', icon: MessageSquare },
-  { label: 'Reports', icon: BarChart3 },
+  { label: 'Reports', to: '/admin/reports', icon: BarChart3 },
   { label: 'Notifications', icon: Bell },
 ]
 
