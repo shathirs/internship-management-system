@@ -28,7 +28,7 @@ const adminMainMenu = [
   { label: 'Submissions', to: '/admin/submissions', icon: FileUp },
   { label: 'Feedback', to: '/admin/feedback', icon: MessageSquare },
   { label: 'Reports', to: '/admin/reports', icon: BarChart3 },
-  { label: 'Notifications', icon: Bell },
+  { label: 'Notifications', to: '/admin/notifications', icon: Bell },
 ]
 
 const internMainMenu = [
@@ -37,7 +37,7 @@ const internMainMenu = [
   { label: 'Daily Work Logs', to: '/intern/work-logs', icon: NotebookPen },
   { label: 'Submissions', to: '/intern/submissions', icon: FileUp },
   { label: 'Feedback', to: '/intern/feedback', icon: MessageSquare },
-  { label: 'Notifications', icon: Bell },
+  { label: 'Notifications', to: '/intern/notifications', icon: Bell },
 ]
 
 const otherMenu = [

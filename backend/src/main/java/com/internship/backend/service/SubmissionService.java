@@ -10,6 +10,7 @@ import com.internship.backend.dto.CreateSubmissionRequest;
 import com.internship.backend.dto.ReviewSubmissionRequest;
 import com.internship.backend.dto.SubmissionResponse;
 import com.internship.backend.model.Intern;
+import com.internship.backend.model.NotificationType;
 import com.internship.backend.model.Submission;
 import com.internship.backend.model.SubmissionStatus;
 import com.internship.backend.model.Task;
@@ -24,15 +25,18 @@ public class SubmissionService {
     private final SubmissionRepository submissionRepository;
     private final InternRepository internRepository;
     private final TaskRepository taskRepository;
+    private final NotificationService notificationService;
 
     public SubmissionService(
             SubmissionRepository submissionRepository,
             InternRepository internRepository,
-            TaskRepository taskRepository
+            TaskRepository taskRepository,
+            NotificationService notificationService
     ) {
         this.submissionRepository = submissionRepository;
         this.internRepository = internRepository;
         this.taskRepository = taskRepository;
+        this.notificationService = notificationService;
     }
 
     public List<SubmissionResponse> getAllForAdmin(String status, String internId) {
@@ -140,7 +144,58 @@ public class SubmissionService {
             taskRepository.save(task);
         });
 
-        return toResponse(submissionRepository.save(submission));
+        Submission saved = submissionRepository.save(submission);
+        notifySubmissionReview(saved);
+        return toResponse(saved);
+    }
+
+    private void notifySubmissionReview(Submission submission) {
+        Intern intern = internRepository.findById(submission.getInternId()).orElse(null);
+        if (intern == null || intern.getEmail() == null || intern.getEmail().isBlank()) {
+            return;
+        }
+
+        String taskTitle = taskRepository.findById(submission.getTaskId())
+                .map(Task::getTitle)
+                .orElse("your task");
+
+        String comment = (submission.getAdminComment() != null
+                && !submission.getAdminComment().isBlank())
+                ? " Comment: " + submission.getAdminComment()
+                : "";
+
+        if (submission.getStatus() == SubmissionStatus.APPROVED) {
+            notificationService.create(
+                    intern.getEmail(),
+                    NotificationType.SUBMISSION_APPROVED,
+                    "Submission approved",
+                    "Your submission for \"" + taskTitle + "\" was approved." + comment,
+                    submission.getTaskId(),
+                    submission.getId(),
+                    intern.getId()
+            );
+            return;
+        }
+
+        if (submission.getStatus() == SubmissionStatus.REVISION_REQUIRED
+                || submission.getStatus() == SubmissionStatus.REJECTED) {
+            String title = submission.getStatus() == SubmissionStatus.REJECTED
+                    ? "Submission rejected"
+                    : "Revision requested";
+            String message = submission.getStatus() == SubmissionStatus.REJECTED
+                    ? "Your submission for \"" + taskTitle + "\" was rejected." + comment
+                    : "Revision requested for \"" + taskTitle + "\"." + comment;
+
+            notificationService.create(
+                    intern.getEmail(),
+                    NotificationType.REVISION_REQUESTED,
+                    title,
+                    message,
+                    submission.getTaskId(),
+                    submission.getId(),
+                    intern.getId()
+            );
+        }
     }
 
     private Intern requireInternByEmail(String email) {

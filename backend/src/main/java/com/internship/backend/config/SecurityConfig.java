@@ -60,6 +60,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/tasks/**").authenticated()
                         .requestMatchers("/api/work-logs/**").authenticated()
                         .requestMatchers("/api/submissions/**").authenticated()
+                        .requestMatchers("/api/notifications/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())

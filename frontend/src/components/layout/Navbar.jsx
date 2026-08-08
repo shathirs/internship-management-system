@@ -1,10 +1,38 @@
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Bell, Mail, Menu, Search, ChevronDown } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
+import { getUnreadCount } from '../../services/notificationService'
 
 export function Navbar({ onMenuClick }) {
   const { user } = useAuth()
+  const [unread, setUnread] = useState(0)
 
   const roleLabel = user?.role === 'ADMIN' ? 'Administrator' : 'Intern'
+  const notificationsPath =
+    user?.role === 'ADMIN' ? '/admin/notifications' : '/intern/notifications'
+
+  useEffect(() => {
+    if (!user) return
+
+    let cancelled = false
+
+    async function loadCount() {
+      try {
+        const count = await getUnreadCount()
+        if (!cancelled) setUnread(count)
+      } catch {
+        if (!cancelled) setUnread(0)
+      }
+    }
+
+    loadCount()
+    const timer = setInterval(loadCount, 60000)
+    return () => {
+      cancelled = true
+      clearInterval(timer)
+    }
+  }, [user])
 
   return (
     <header className="topbar">
@@ -25,10 +53,14 @@ export function Navbar({ onMenuClick }) {
       </div>
 
       <div className="topbar-right">
-        <button type="button" className="topbar-icon-btn" aria-label="Notifications">
+        <Link
+          to={notificationsPath}
+          className="topbar-icon-btn"
+          aria-label="Notifications"
+        >
           <Bell className="h-5 w-5" />
-          <span className="topbar-badge">5</span>
-        </button>
+          {unread > 0 && <span className="topbar-badge">{unread}</span>}
+        </Link>
 
         <button type="button" className="topbar-icon-btn" aria-label="Messages">
           <Mail className="h-5 w-5" />

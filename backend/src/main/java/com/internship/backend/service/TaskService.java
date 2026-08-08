@@ -2,6 +2,7 @@ package com.internship.backend.service;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import com.internship.backend.dto.CreateTaskRequest;
 import com.internship.backend.dto.TaskResponse;
 import com.internship.backend.dto.UpdateTaskRequest;
 import com.internship.backend.model.Intern;
+import com.internship.backend.model.NotificationType;
 import com.internship.backend.model.Task;
 import com.internship.backend.model.TaskPriority;
 import com.internship.backend.model.TaskStatus;
@@ -24,15 +26,18 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final InternRepository internRepository;
     private final ProjectRepository projectRepository;
+    private final NotificationService notificationService;
 
     public TaskService(
             TaskRepository taskRepository,
             InternRepository internRepository,
-            ProjectRepository projectRepository
+            ProjectRepository projectRepository,
+            NotificationService notificationService
     ) {
         this.taskRepository = taskRepository;
         this.internRepository = internRepository;
         this.projectRepository = projectRepository;
+        this.notificationService = notificationService;
     }
 
     public List<TaskResponse> getAll(String search, String status, String projectId) {
@@ -104,6 +109,7 @@ public class TaskService {
         task.setUpdatedAt(now);
 
         task = taskRepository.save(task);
+        notifyTaskAssigned(task);
         return toResponse(task);
     }
 
@@ -113,6 +119,8 @@ public class TaskService {
 
         validateProjectId(request.getProjectId());
         validateInternId(request.getAssignedInternId());
+
+        String previousAssignee = task.getAssignedInternId();
 
         task.setTitle(request.getTitle());
         task.setDescription(request.getDescription());
@@ -128,6 +136,12 @@ public class TaskService {
         task.setUpdatedAt(Instant.now());
 
         task = taskRepository.save(task);
+
+        String newAssignee = task.getAssignedInternId();
+        if (newAssignee != null && !Objects.equals(newAssignee, previousAssignee)) {
+            notifyTaskAssigned(task);
+        }
+
         return toResponse(task);
     }
 
@@ -139,7 +153,9 @@ public class TaskService {
         task.setAssignedInternId(request.getAssignedInternId());
         task.setUpdatedAt(Instant.now());
 
-        return toResponse(taskRepository.save(task));
+        task = taskRepository.save(task);
+        notifyTaskAssigned(task);
+        return toResponse(task);
     }
 
     public void delete(String id) {
@@ -147,6 +163,31 @@ public class TaskService {
             throw new IllegalArgumentException("Task not found");
         }
         taskRepository.deleteById(id);
+    }
+
+    private void notifyTaskAssigned(Task task) {
+        if (task.getAssignedInternId() == null || task.getAssignedInternId().isBlank()) {
+            return;
+        }
+
+        Intern intern = internRepository.findById(task.getAssignedInternId()).orElse(null);
+        if (intern == null || intern.getEmail() == null || intern.getEmail().isBlank()) {
+            return;
+        }
+
+        String deadlinePart = (task.getDeadline() != null && !task.getDeadline().isBlank())
+                ? " Deadline: " + task.getDeadline() + "."
+                : "";
+
+        notificationService.create(
+                intern.getEmail(),
+                NotificationType.TASK_ASSIGNED,
+                "New task assigned",
+                "You have been assigned: \"" + task.getTitle() + "\"." + deadlinePart,
+                task.getId(),
+                null,
+                intern.getId()
+        );
     }
 
     private void validateProjectId(String projectId) {

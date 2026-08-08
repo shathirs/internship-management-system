@@ -417,6 +417,7 @@ body {
   background: var(--ims-surface);
   color: var(--ims-text-muted);
   cursor: pointer;
+  text-decoration: none;
 }
 
 .topbar-menu-btn:hover,
@@ -1290,4 +1291,9 @@ body {
   margin: 0.25rem 0 0;
   color: var(--ims-text-muted);
   font-size: 0.8rem;
+}
+
+.notification-unread td {
+  font-weight: 600;
+  background: #f8fafc;
 }

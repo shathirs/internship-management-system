@@ -25,6 +25,8 @@ import { SubmitWorkPage } from './pages/intern/submissions/SubmitWorkPage'
 import { AdminFeedbackPage } from './pages/admin/feedback/AdminFeedbackPage'
 import { InternFeedbackPage } from './pages/intern/feedback/InternFeedbackPage'
 import { ReportsPage } from './pages/admin/reports/ReportsPage'
+import { InternNotificationsPage } from './pages/intern/notifications/InternNotificationsPage'
+import { AdminNotificationsPage } from './pages/admin/notifications/AdminNotificationsPage'
 
 function App() {
   return (
@@ -168,6 +170,14 @@ function App() {
           }
         />
         <Route
+          path="/admin/notifications"
+          element={
+            <RoleRoute allow={['ADMIN']}>
+              <AdminNotificationsPage />
+            </RoleRoute>
+          }
+        />
+        <Route
           path="/intern"
           element={
             <RoleRoute allow={['INTERN']}>
@@ -212,6 +222,14 @@ function App() {
           element={
             <RoleRoute allow={['INTERN']}>
               <InternFeedbackPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/intern/notifications"
+          element={
+            <RoleRoute allow={['INTERN']}>
+              <InternNotificationsPage />
             </RoleRoute>
           }
         />
