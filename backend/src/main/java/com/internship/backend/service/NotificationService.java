@@ -12,11 +12,14 @@ import com.internship.backend.dto.NotificationResponse;
 import com.internship.backend.model.Intern;
 import com.internship.backend.model.Notification;
 import com.internship.backend.model.NotificationType;
+import com.internship.backend.model.Role;
 import com.internship.backend.model.Task;
 import com.internship.backend.model.TaskStatus;
+import com.internship.backend.model.User;
 import com.internship.backend.repository.InternRepository;
 import com.internship.backend.repository.NotificationRepository;
 import com.internship.backend.repository.TaskRepository;
+import com.internship.backend.repository.UserRepository;
 
 @Service
 public class NotificationService {
@@ -24,15 +27,18 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final TaskRepository taskRepository;
     private final InternRepository internRepository;
+    private final UserRepository userRepository;
 
     public NotificationService(
             NotificationRepository notificationRepository,
             TaskRepository taskRepository,
-            InternRepository internRepository
+            InternRepository internRepository,
+            UserRepository userRepository
     ) {
         this.notificationRepository = notificationRepository;
         this.taskRepository = taskRepository;
         this.internRepository = internRepository;
+        this.userRepository = userRepository;
     }
 
     public NotificationResponse create(
@@ -55,6 +61,30 @@ public class NotificationService {
         notification.setRead(false);
         notification.setCreatedAt(Instant.now());
         return toResponse(notificationRepository.save(notification));
+    }
+
+    public void notifyAllAdmins(
+            NotificationType type,
+            String title,
+            String message,
+            String relatedTaskId,
+            String relatedSubmissionId,
+            String relatedInternId
+    ) {
+        for (User admin : userRepository.findByRole(Role.ADMIN)) {
+            if (admin.getEmail() == null || admin.getEmail().isBlank()) {
+                continue;
+            }
+            create(
+                    admin.getEmail(),
+                    type,
+                    title,
+                    message,
+                    relatedTaskId,
+                    relatedSubmissionId,
+                    relatedInternId
+            );
+        }
     }
 
     public void sendDeadlineReminders(int daysAhead) {

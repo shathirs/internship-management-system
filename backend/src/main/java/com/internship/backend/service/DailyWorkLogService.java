@@ -11,6 +11,7 @@ import com.internship.backend.dto.ReviewWorkLogRequest;
 import com.internship.backend.dto.WorkLogResponse;
 import com.internship.backend.model.DailyWorkLog;
 import com.internship.backend.model.Intern;
+import com.internship.backend.model.NotificationType;
 import com.internship.backend.model.WorkLogStatus;
 import com.internship.backend.repository.DailyWorkLogRepository;
 import com.internship.backend.repository.InternRepository;
@@ -20,13 +21,16 @@ public class DailyWorkLogService {
 
     private final DailyWorkLogRepository workLogRepository;
     private final InternRepository internRepository;
+    private final NotificationService notificationService;
 
     public DailyWorkLogService(
             DailyWorkLogRepository workLogRepository,
-            InternRepository internRepository
+            InternRepository internRepository,
+            NotificationService notificationService
     ) {
         this.workLogRepository = workLogRepository;
         this.internRepository = internRepository;
+        this.notificationService = notificationService;
     }
 
     public List<WorkLogResponse> getAllForAdmin(String status, String internId) {
@@ -99,7 +103,16 @@ public class DailyWorkLogService {
         log.setCreatedAt(now);
         log.setUpdatedAt(now);
 
-        return toResponse(workLogRepository.save(log));
+        DailyWorkLog saved = workLogRepository.save(log);
+        notificationService.notifyAllAdmins(
+                NotificationType.WORK_LOG_SUBMITTED,
+                "New work log submitted",
+                intern.getFullName() + " submitted a work log for " + saved.getLogDate() + ".",
+                null,
+                null,
+                intern.getId()
+        );
+        return toResponse(saved);
     }
 
     public WorkLogResponse review(String id, ReviewWorkLogRequest request) {

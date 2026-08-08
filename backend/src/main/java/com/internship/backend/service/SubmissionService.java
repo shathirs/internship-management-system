@@ -114,7 +114,16 @@ public class SubmissionService {
         task.setUpdatedAt(now);
         taskRepository.save(task);
 
-        return toResponse(submissionRepository.save(submission));
+        Submission saved = submissionRepository.save(submission);
+        notificationService.notifyAllAdmins(
+                NotificationType.WORK_SUBMITTED,
+                "New work submission",
+                intern.getFullName() + " submitted work for \"" + task.getTitle() + "\".",
+                task.getId(),
+                saved.getId(),
+                intern.getId()
+        );
+        return toResponse(saved);
     }
 
     public SubmissionResponse review(String id, ReviewSubmissionRequest request) {

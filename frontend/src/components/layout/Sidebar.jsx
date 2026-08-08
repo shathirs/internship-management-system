@@ -33,7 +33,7 @@ const adminMainMenu = [
 
 const internMainMenu = [
   { label: 'Dashboard', icon: LayoutDashboard },
-  { label: 'My Tasks', icon: ListTodo },
+  { label: 'My Tasks', to: '/intern/tasks', icon: ListTodo },
   { label: 'Daily Work Logs', to: '/intern/work-logs', icon: NotebookPen },
   { label: 'Submissions', to: '/intern/submissions', icon: FileUp },
   { label: 'Feedback', to: '/intern/feedback', icon: MessageSquare },

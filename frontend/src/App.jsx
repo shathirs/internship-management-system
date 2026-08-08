@@ -27,6 +27,7 @@ import { InternFeedbackPage } from './pages/intern/feedback/InternFeedbackPage'
 import { ReportsPage } from './pages/admin/reports/ReportsPage'
 import { InternNotificationsPage } from './pages/intern/notifications/InternNotificationsPage'
 import { AdminNotificationsPage } from './pages/admin/notifications/AdminNotificationsPage'
+import { InternTaskListPage } from './pages/intern/tasks/InternTaskListPage'
 
 function App() {
   return (
@@ -182,6 +183,14 @@ function App() {
           element={
             <RoleRoute allow={['INTERN']}>
               <InternDashboard />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/intern/tasks"
+          element={
+            <RoleRoute allow={['INTERN']}>
+              <InternTaskListPage />
             </RoleRoute>
           }
         />
