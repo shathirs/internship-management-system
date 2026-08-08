@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Bell, Mail, Menu, Search, ChevronDown } from 'lucide-react'
+import { Bell, Mail, Menu, Search } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { getUnreadCount } from '../../services/notificationService'
 
@@ -77,7 +77,6 @@ export function Navbar({ onMenuClick }) {
             <p className="topbar-user-name">{user?.name || 'User'}</p>
             <p className="topbar-user-role">{roleLabel}</p>
           </div>
-          <ChevronDown className="h-4 w-4 topbar-user-chevron" />
         </button>
       </div>
     </header>
