@@ -48,8 +48,8 @@ export function Sidebar({ onNavigate }) {
 
   const homePath = user?.role === 'ADMIN' ? '/admin' : '/intern'
   const mainMenu = user?.role === 'ADMIN' ? adminMainMenu : internMainMenu
-  const profilePath = user?.role === 'ADMIN' ? '/admin/profile' : null
-  const settingsPath = user?.role === 'ADMIN' ? '/admin/settings' : null
+  const profilePath = user?.role === 'ADMIN' ? '/admin/profile' : '/intern/profile'
+  const settingsPath = user?.role === 'ADMIN' ? '/admin/settings' : '/intern/settings'
 
   function handlePlaceholder(label) {
     toast(`${label} coming soon`)

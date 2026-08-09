@@ -30,6 +30,8 @@ import { AdminNotificationsPage } from './pages/admin/notifications/AdminNotific
 import { InternTaskListPage } from './pages/intern/tasks/InternTaskListPage'
 import { AdminProfilePage } from './pages/admin/profile/AdminProfilePage'
 import { AdminSettingsPage } from './pages/admin/settings/AdminSettingsPage'
+import { InternProfilePage } from './pages/intern/profile/InternProfilePage'
+import { InternSettingsPage } from './pages/intern/settings/InternSettingsPage'
 
 function App() {
   return (
@@ -257,6 +259,22 @@ function App() {
           element={
             <RoleRoute allow={['INTERN']}>
               <InternNotificationsPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/intern/profile"
+          element={
+            <RoleRoute allow={['INTERN']}>
+              <InternProfilePage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/intern/settings"
+          element={
+            <RoleRoute allow={['INTERN']}>
+              <InternSettingsPage />
             </RoleRoute>
           }
         />
