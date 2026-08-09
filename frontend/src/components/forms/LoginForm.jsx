@@ -125,13 +125,6 @@ export function LoginForm() {
           </>
         )}
       </Button>
-
-      <p className="login-footer">
-        Need an account?{' '}
-        <button type="button" className="login-link">
-          Contact administrator
-        </button>
-      </p>
     </form>
   )
 }

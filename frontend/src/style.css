@@ -1297,3 +1297,75 @@ body {
   font-weight: 600;
   background: #f8fafc;
 }
+
+.dashboard-panels {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-top: 1.1rem;
+}
+
+@media (min-width: 1000px) {
+  .dashboard-panels {
+    grid-template-columns: 1.2fr 1fr;
+  }
+}
+
+.dashboard-quick-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.65rem;
+}
+
+.dashboard-quick-action {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--ims-border);
+  border-radius: 0.75rem;
+  text-decoration: none;
+  color: var(--ims-text);
+  background: #f8fafc;
+}
+
+.dashboard-quick-action:hover {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.dashboard-activity-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.dashboard-activity-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--ims-border);
+}
+
+.dashboard-activity-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.dashboard-activity-title {
+  margin: 0;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.dashboard-activity-message,
+.dashboard-activity-date {
+  margin: 0.25rem 0 0;
+  color: var(--ims-text-muted);
+  font-size: 0.8rem;
+}

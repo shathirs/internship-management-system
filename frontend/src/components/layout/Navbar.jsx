@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Bell, Mail, Menu, Search } from 'lucide-react'
+import { Bell, Menu, Search } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { getUnreadCount } from '../../services/notificationService'
 
@@ -61,11 +61,6 @@ export function Navbar({ onMenuClick }) {
           <Bell className="h-5 w-5" />
           {unread > 0 && <span className="topbar-badge">{unread}</span>}
         </Link>
-
-        <button type="button" className="topbar-icon-btn" aria-label="Messages">
-          <Mail className="h-5 w-5" />
-          <span className="topbar-badge">3</span>
-        </button>
 
         <div className="topbar-divider" />
 

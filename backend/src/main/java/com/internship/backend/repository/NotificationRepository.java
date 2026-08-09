@@ -16,6 +16,8 @@ public interface NotificationRepository extends MongoRepository<Notification, St
 
     List<Notification> findByRecipientEmailAndReadFalse(String recipientEmail);
 
+    List<Notification> findAllByOrderByCreatedAtDesc();
+
     boolean existsByRecipientEmailAndTypeAndRelatedTaskIdAndCreatedAtAfter(
             String recipientEmail,
             NotificationType type,
