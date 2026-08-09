@@ -48,6 +48,8 @@ export function Sidebar({ onNavigate }) {
 
   const homePath = user?.role === 'ADMIN' ? '/admin' : '/intern'
   const mainMenu = user?.role === 'ADMIN' ? adminMainMenu : internMainMenu
+  const profilePath = user?.role === 'ADMIN' ? '/admin/profile' : null
+  const settingsPath = user?.role === 'ADMIN' ? '/admin/settings' : null
 
   function handlePlaceholder(label) {
     toast(`${label} coming soon`)
@@ -133,6 +135,30 @@ export function Sidebar({ onNavigate }) {
         <ul className="sidebar-menu">
           {otherMenu.map((item) => {
             const Icon = item.icon
+            const to =
+              item.label === 'Profile'
+                ? profilePath
+                : item.label === 'Settings'
+                  ? settingsPath
+                  : null
+
+            if (to) {
+              return (
+                <li key={item.label}>
+                  <NavLink
+                    to={to}
+                    className={({ isActive }) =>
+                      `sidebar-link ${isActive ? 'is-active' : ''}`
+                    }
+                    onClick={() => onNavigate?.()}
+                  >
+                    <Icon className="sidebar-link-icon" />
+                    <span>{item.label}</span>
+                  </NavLink>
+                </li>
+              )
+            }
+
             return (
               <li key={item.label}>
                 <button

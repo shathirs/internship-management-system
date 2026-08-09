@@ -28,6 +28,8 @@ import { ReportsPage } from './pages/admin/reports/ReportsPage'
 import { InternNotificationsPage } from './pages/intern/notifications/InternNotificationsPage'
 import { AdminNotificationsPage } from './pages/admin/notifications/AdminNotificationsPage'
 import { InternTaskListPage } from './pages/intern/tasks/InternTaskListPage'
+import { AdminProfilePage } from './pages/admin/profile/AdminProfilePage'
+import { AdminSettingsPage } from './pages/admin/settings/AdminSettingsPage'
 
 function App() {
   return (
@@ -175,6 +177,22 @@ function App() {
           element={
             <RoleRoute allow={['ADMIN']}>
               <AdminNotificationsPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/admin/profile"
+          element={
+            <RoleRoute allow={['ADMIN']}>
+              <AdminProfilePage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/admin/settings"
+          element={
+            <RoleRoute allow={['ADMIN']}>
+              <AdminSettingsPage />
             </RoleRoute>
           }
         />

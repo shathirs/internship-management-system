@@ -1,6 +1,12 @@
 import { createContext, useContext, useMemo, useState } from 'react'
 import { login as loginRequest } from '../services/authService'
-import { clearAuth, getToken, getUser, saveAuth } from '../lib/authStorage'
+import {
+  clearAuth,
+  getToken,
+  getUser,
+  saveAuth,
+  updateStoredUser,
+} from '../lib/authStorage'
 
 const AuthContext = createContext(null)
 
@@ -29,6 +35,12 @@ export function AuthProvider({ children }) {
     setUser(null)
   }
 
+  function updateUser(partial) {
+    const next = updateStoredUser(partial)
+    setUser(next)
+    return next
+  }
+
   const value = useMemo(
     () => ({
       token,
@@ -36,6 +48,7 @@ export function AuthProvider({ children }) {
       isAuthenticated: Boolean(token),
       login,
       logout,
+      updateUser,
     }),
     [token, user],
   )

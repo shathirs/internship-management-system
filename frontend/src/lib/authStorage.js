@@ -9,6 +9,13 @@ export function saveAuth({ token, email, name, role }) {
   )
 }
 
+export function updateStoredUser(partial) {
+  const current = getUser() || {}
+  const next = { ...current, ...partial }
+  localStorage.setItem(USER_KEY, JSON.stringify(next))
+  return next
+}
+
 export function getToken() {
   return localStorage.getItem(TOKEN_KEY)
 }

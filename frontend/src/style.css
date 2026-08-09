@@ -710,6 +710,19 @@ body {
   box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
 }
 
+.form-section-title {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ims-text);
+}
+
+.form-section-subtitle {
+  margin: 0 0 1.25rem;
+  font-size: 0.875rem;
+  color: var(--ims-text-muted);
+}
+
 .intern-form {
   display: grid;
   gap: 1rem;
