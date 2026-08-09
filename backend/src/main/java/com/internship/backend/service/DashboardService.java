@@ -13,18 +13,22 @@ import org.springframework.stereotype.Service;
 import com.internship.backend.dto.DashboardActivityItem;
 import com.internship.backend.dto.DashboardDeadlineItem;
 import com.internship.backend.dto.DashboardSummaryResponse;
+import com.internship.backend.dto.InternDashboardSummaryResponse;
 import com.internship.backend.model.DailyWorkLog;
 import com.internship.backend.model.Intern;
 import com.internship.backend.model.Notification;
 import com.internship.backend.model.NotificationType;
 import com.internship.backend.model.Project;
 import com.internship.backend.model.ProjectStatus;
+import com.internship.backend.model.Submission;
+import com.internship.backend.model.SubmissionStatus;
 import com.internship.backend.model.Task;
 import com.internship.backend.model.TaskStatus;
 import com.internship.backend.repository.DailyWorkLogRepository;
 import com.internship.backend.repository.InternRepository;
 import com.internship.backend.repository.NotificationRepository;
 import com.internship.backend.repository.ProjectRepository;
+import com.internship.backend.repository.SubmissionRepository;
 import com.internship.backend.repository.TaskRepository;
 
 @Service
@@ -35,19 +39,22 @@ public class DashboardService {
     private final TaskRepository taskRepository;
     private final DailyWorkLogRepository workLogRepository;
     private final NotificationRepository notificationRepository;
+    private final SubmissionRepository submissionRepository;
 
     public DashboardService(
             InternRepository internRepository,
             ProjectRepository projectRepository,
             TaskRepository taskRepository,
             DailyWorkLogRepository workLogRepository,
-            NotificationRepository notificationRepository
+            NotificationRepository notificationRepository,
+            SubmissionRepository submissionRepository
     ) {
         this.internRepository = internRepository;
         this.projectRepository = projectRepository;
         this.taskRepository = taskRepository;
         this.workLogRepository = workLogRepository;
         this.notificationRepository = notificationRepository;
+        this.submissionRepository = submissionRepository;
     }
 
     public DashboardSummaryResponse getSummary() {
@@ -79,31 +86,81 @@ public class DashboardService {
         response.setTodaysWorkLogs(workLogs.stream()
                 .filter(l -> isTodaysWorkLog(l, today))
                 .count());
-        response.setRecentActivities(buildRecentActivities());
+        response.setRecentActivities(buildAdminRecentActivities());
         response.setUpcomingDeadlines(buildUpcomingDeadlines(tasks, internNames, today));
         return response;
     }
 
-    private List<DashboardActivityItem> buildRecentActivities() {
+    public InternDashboardSummaryResponse getInternSummary(String email) {
+        LocalDate today = LocalDate.now();
+        Intern intern = internRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Intern profile not found"));
+
+        List<Task> myTasks = taskRepository.findByAssignedInternId(intern.getId());
+        List<DailyWorkLog> myLogs = workLogRepository.findByInternId(intern.getId());
+        List<Submission> mySubmissions = submissionRepository.findByInternId(intern.getId());
+
+        InternDashboardSummaryResponse response = new InternDashboardSummaryResponse();
+        response.setMyTasks(myTasks.size());
+        response.setInProgressTasks(myTasks.stream()
+                .filter(t -> t.getStatus() == TaskStatus.IN_PROGRESS)
+                .count());
+        response.setCompletedTasks(myTasks.stream()
+                .filter(t -> t.getStatus() == TaskStatus.COMPLETED)
+                .count());
+        response.setOverdueTasks(myTasks.stream()
+                .filter(t -> isOverdue(t, today))
+                .count());
+        response.setMyWorkLogs(myLogs.size());
+        response.setPendingSubmissions(mySubmissions.stream()
+                .filter(s -> s.getStatus() == SubmissionStatus.SUBMITTED
+                        || s.getStatus() == SubmissionStatus.REVISION_REQUIRED)
+                .count());
+
+        response.setRecentNotifications(
+                notificationRepository.findByRecipientEmailOrderByCreatedAtDesc(email)
+                        .stream()
+                        .limit(8)
+                        .map(this::toInternActivityItem)
+                        .collect(Collectors.toList())
+        );
+
+        Map<String, String> selfName = Map.of(intern.getId(), intern.getFullName());
+        response.setUpcomingDeadlines(buildUpcomingDeadlines(myTasks, selfName, today));
+        return response;
+    }
+
+    private List<DashboardActivityItem> buildAdminRecentActivities() {
         return notificationRepository.findAllByOrderByCreatedAtDesc()
                 .stream()
                 .limit(8)
-                .map(this::toActivityItem)
+                .map(this::toAdminActivityItem)
                 .collect(Collectors.toList());
     }
 
-    private DashboardActivityItem toActivityItem(Notification notification) {
+    private DashboardActivityItem toAdminActivityItem(Notification notification) {
+        DashboardActivityItem item = baseActivityItem(notification);
+        item.setHref(resolveAdminHref(notification));
+        return item;
+    }
+
+    private DashboardActivityItem toInternActivityItem(Notification notification) {
+        DashboardActivityItem item = baseActivityItem(notification);
+        item.setHref(resolveInternHref(notification));
+        return item;
+    }
+
+    private DashboardActivityItem baseActivityItem(Notification notification) {
         DashboardActivityItem item = new DashboardActivityItem();
         item.setId(notification.getId());
         item.setType(notification.getType() != null ? notification.getType().name() : null);
         item.setTitle(notification.getTitle());
         item.setMessage(notification.getMessage());
-        item.setHref(resolveHref(notification));
         item.setCreatedAt(notification.getCreatedAt());
         return item;
     }
 
-    private String resolveHref(Notification notification) {
+    private String resolveAdminHref(Notification notification) {
         NotificationType type = notification.getType();
         if (type == NotificationType.WORK_SUBMITTED
                 && notification.getRelatedSubmissionId() != null) {
@@ -113,6 +170,18 @@ public class DashboardService {
             return "/admin/work-logs";
         }
         return "/admin/notifications";
+    }
+
+    private String resolveInternHref(Notification notification) {
+        NotificationType type = notification.getType();
+        if (type == NotificationType.TASK_ASSIGNED || type == NotificationType.DEADLINE_REMINDER) {
+            return "/intern/tasks";
+        }
+        if (type == NotificationType.SUBMISSION_APPROVED
+                || type == NotificationType.REVISION_REQUESTED) {
+            return "/intern/submissions";
+        }
+        return "/intern/notifications";
     }
 
     private List<DashboardDeadlineItem> buildUpcomingDeadlines(
